@@ -1,0 +1,21 @@
+fieldset {
+	margin: 25px auto;
+	width: 400px;
+}
+
+table {
+	width: 300px;
+	margin: 15px auto;
+}
+
+th {
+	text-align: right;
+}
+
+#submit {
+	width: 60px;
+	height: 30px;
+	margin: 5px;
+	background-color: aquamarine;
+	border: none;
+}

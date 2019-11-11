@@ -1,0 +1,161 @@
+-- 包括床位，客户，膳食和护理数据库信息
+
+CREATE TABLE `bedmanage` (
+  `manageid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '床位管理编号',
+  `cid` int(10) unsigned NOT NULL COMMENT '入住客户',
+  `bedid` int(10) unsigned NOT NULL COMMENT '床位主键',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  `moveindate` date NOT NULL COMMENT '入住日期',
+  `enddate` date NOT NULL COMMENT '结束日期',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`manageid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='床位管理';
+
+CREATE TABLE `beds` (
+  `bedid` int(10) unsigned NOT NULL COMMENT '床号',
+  `buildingid` int(10) unsigned NOT NULL COMMENT '所在楼号',
+  `bedstatus` bit(1) NOT NULL DEFAULT b'0' COMMENT '床位状态',
+  `resposeid` int(10) unsigned NOT NULL COMMENT '床位负责人',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`bedid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='床位信息表';
+
+CREATE TABLE `buildings` (
+  `buildingid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '楼号',
+  `totalbeds` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '床位总数',
+  `usedbeds` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '使用床位数',
+  `resposeid` int(10) unsigned DEFAULT NULL COMMENT '负责人',
+  `bstatus` bit(1) NOT NULL DEFAULT b'0' COMMENT '建筑状态',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`buildingid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `clientbase` (
+  `cid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '客户主键',
+  `fileno` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '档案编号',
+  `idno` char(18) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '身份证号',
+  `cname` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
+  `gender` bit(1) NOT NULL DEFAULT b'0' COMMENT '性别',
+  `age` bit(1) DEFAULT b'0' COMMENT '年龄',
+  `birthday` date NOT NULL COMMENT '出生日期',
+  `height` bit(1) DEFAULT b'0' COMMENT '身高',
+  `weight` bit(1) DEFAULT b'0' COMMENT '体重',
+  `marriage` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '其他' COMMENT '婚姻状况',
+  `bloodtype` bit(1) DEFAULT b'0' COMMENT '血型',
+  `disease` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '无' COMMENT '患有疾病',
+  `famhist` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '无' COMMENT '家族病史',
+  `cretime` timestamp NOT NULL COMMENT '创建时间',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '头像',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`cid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户基本表';
+
+CREATE TABLE `clienthealth` (
+  `chid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '健康管理主键',
+  `cid` int(10) unsigned NOT NULL COMMENT '顾客主键',
+  `assessid` int(10) unsigned DEFAULT NULL COMMENT '评估医生主键',
+  `responseid` int(10) unsigned DEFAULT NULL COMMENT '责任医生主键',
+  `butlerid` int(10) unsigned DEFAULT NULL COMMENT '健康管家主键',
+  `emercontact` varchar(20) DEFAULT NULL COMMENT '紧急联系人',
+  `emertele` varchar(20) DEFAULT NULL COMMENT '紧急联系电话',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`chid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户健康表';
+
+CREATE TABLE `clientsettlement` (
+  `moveinid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '入住信息主键',
+  `cid` int(10) unsigned NOT NULL COMMENT '客户主键',
+  `buildingid` bit(1) DEFAULT NULL COMMENT '楼号',
+  `bedid` char(4) DEFAULT NULL COMMENT '床号',
+  `status` bit(1) DEFAULT NULL COMMENT '入住状态',
+  `moveintime` date NOT NULL COMMENT '入住时间',
+  `endtime` date NOT NULL COMMENT '预计到期时间',
+  `clienttype` bit(1) DEFAULT NULL COMMENT '客户类型',
+  `tele` varchar(20) DEFAULT NULL COMMENT '联系电话',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  `cratetime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`moveinid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户入住表';
+
+CREATE TABLE `clientsupply` (
+  `csupplyid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '客户供应主键',
+  `cid` int(10) unsigned NOT NULL COMMENT '客户主键',
+  `diaryid` int(10) unsigned NOT NULL COMMENT '膳食主键',
+  `supplydate` date DEFAULT NULL COMMENT '供应日期',
+  `supplyweek` bit(1) DEFAULT NULL COMMENT '供应星期',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`csupplyid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `diarysupply` (
+  `supplyid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '供应主键',
+  `diaryid` int(10) unsigned DEFAULT NULL COMMENT '膳食主键',
+  `supplydate` bit(1) NOT NULL DEFAULT b'0' COMMENT '供应时间',
+  `supplytype` bit(1) NOT NULL DEFAULT b'0' COMMENT '供应类型',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`supplyid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `dietary` (
+  `dietaryid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '膳食主键',
+  `dname` varchar(20) NOT NULL COMMENT '膳食名称',
+  `dclass` bit(1) NOT NULL DEFAULT b'0' COMMENT '膳食种类',
+  `dtag` bit(1) DEFAULT b'0' COMMENT '膳食标签',
+  `dprice` decimal(10,2) DEFAULT NULL COMMENT '膳食价格',
+  `dpicture` varchar(200) DEFAULT NULL COMMENT '膳食图片',
+  `islamic` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否清真',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`dietaryid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nurse` (
+  `nurseid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '护理主键',
+  `item` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '护理项目',
+  `price` decimal(10,2) DEFAULT NULL COMMENT '护理价格',
+  `detail` varchar(200) DEFAULT NULL COMMENT '护理细节',
+  `addvalue` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否是增值服务',
+  `status` bit(1) NOT NULL DEFAULT b'0' COMMENT '服务状态',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`nurseid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `nurselevel` (
+  `level` bit(1) NOT NULL COMMENT '护理等级',
+  `status` bit(1) NOT NULL DEFAULT b'0' COMMENT '护理等级状态',
+  `else` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '备注',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='护理等级表';
+CREATE TABLE `nurserecord` (
+  `recordid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '记录主键',
+  `cid` int(10) unsigned NOT NULL COMMENT '客户主键',
+  `resposeid` int(10) unsigned NOT NULL COMMENT '护理员工主键',
+  `nurseid` int(10) unsigned NOT NULL COMMENT '护理项目主键',
+  `nursetime` date NOT NULL COMMENT '护理时间',
+  `nursecontent` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '护理内容',
+  `total` tinyint(4) unsigned DEFAULT '0' COMMENT '护理量',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`recordid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='护理记录表';
+
+CREATE TABLE `staffs` (
+  `staffid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '员工编号',
+  `sname` varchar(20) DEFAULT NULL COMMENT '员工姓名',
+  `sgender` bit(1) DEFAULT b'0' COMMENT '员工性别',
+  `sbirthday` date DEFAULT NULL COMMENT '员工出生日期',
+  `sage` bit(1) DEFAULT NULL COMMENT '员工年龄',
+  `cratetime` timestamp NOT NULL COMMENT '创建时间',
+  `hiredate` date NOT NULL COMMENT '员工入职时间',
+  `jobid` bit(1) NOT NULL DEFAULT b'0' COMMENT '职位编号',
+  `stitle` varchar(20) DEFAULT NULL COMMENT '职称',
+  `phone` char(16) DEFAULT NULL COMMENT '电话',
+  `info` varchar(200) DEFAULT NULL COMMENT '简介',
+  `else` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`staffid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='员工信息表';
